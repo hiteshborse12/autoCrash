@@ -13,6 +13,9 @@
 		677363E41CCA2A8D00E0748A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 677363E21CCA2A8D00E0748A /* Main.storyboard */; };
 		677363E61CCA2A8D00E0748A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 677363E51CCA2A8D00E0748A /* Assets.xcassets */; };
 		677363E91CCA2A8D00E0748A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 677363E71CCA2A8D00E0748A /* LaunchScreen.storyboard */; };
+		677363F71CCA2BAB00E0748A /* SOLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 677363F21CCA2BAB00E0748A /* SOLocationManager.m */; };
+		677363F81CCA2BAB00E0748A /* SOMotionDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 677363F41CCA2BAB00E0748A /* SOMotionDetector.m */; };
+		677363F91CCA2BAB00E0748A /* SOStepDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 677363F61CCA2BAB00E0748A /* SOStepDetector.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,12 @@
 		677363E51CCA2A8D00E0748A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		677363E81CCA2A8D00E0748A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		677363EA1CCA2A8D00E0748A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		677363F11CCA2BAB00E0748A /* SOLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOLocationManager.h; sourceTree = "<group>"; };
+		677363F21CCA2BAB00E0748A /* SOLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOLocationManager.m; sourceTree = "<group>"; };
+		677363F31CCA2BAB00E0748A /* SOMotionDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOMotionDetector.h; sourceTree = "<group>"; };
+		677363F41CCA2BAB00E0748A /* SOMotionDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOMotionDetector.m; sourceTree = "<group>"; };
+		677363F51CCA2BAB00E0748A /* SOStepDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOStepDetector.h; sourceTree = "<group>"; };
+		677363F61CCA2BAB00E0748A /* SOStepDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOStepDetector.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +67,7 @@
 		677363D81CCA2A8D00E0748A /* AutoCrash */ = {
 			isa = PBXGroup;
 			children = (
+				677363F01CCA2BAB00E0748A /* SOMotionDetector */,
 				677363DC1CCA2A8D00E0748A /* AppDelegate.h */,
 				677363DD1CCA2A8D00E0748A /* AppDelegate.m */,
 				677363DF1CCA2A8D00E0748A /* ViewController.h */,
@@ -77,6 +87,19 @@
 				677363DA1CCA2A8D00E0748A /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		677363F01CCA2BAB00E0748A /* SOMotionDetector */ = {
+			isa = PBXGroup;
+			children = (
+				677363F11CCA2BAB00E0748A /* SOLocationManager.h */,
+				677363F21CCA2BAB00E0748A /* SOLocationManager.m */,
+				677363F31CCA2BAB00E0748A /* SOMotionDetector.h */,
+				677363F41CCA2BAB00E0748A /* SOMotionDetector.m */,
+				677363F51CCA2BAB00E0748A /* SOStepDetector.h */,
+				677363F61CCA2BAB00E0748A /* SOStepDetector.m */,
+			);
+			path = SOMotionDetector;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -110,6 +133,11 @@
 				TargetAttributes = {
 					677363D51CCA2A8D00E0748A = {
 						CreatedOnToolsVersion = 7.2;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -149,9 +177,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				677363F71CCA2BAB00E0748A /* SOLocationManager.m in Sources */,
+				677363F91CCA2BAB00E0748A /* SOStepDetector.m in Sources */,
 				677363E11CCA2A8D00E0748A /* ViewController.m in Sources */,
 				677363DE1CCA2A8D00E0748A /* AppDelegate.m in Sources */,
 				677363DB1CCA2A8D00E0748A /* main.m in Sources */,
+				677363F81CCA2BAB00E0748A /* SOMotionDetector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,10 +294,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: prathamesh navghare (ZQZUJ88J4H)";
 				INFOPLIST_FILE = AutoCrash/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.neosofttech.-.AutoCrash";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "69c067dd-9df6-4766-9ab9-eb5f8ea0ba30";
 			};
 			name = Debug;
 		};
@@ -274,10 +307,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: prathamesh navghare (ZQZUJ88J4H)";
 				INFOPLIST_FILE = AutoCrash/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.neosofttech.-.AutoCrash";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "69c067dd-9df6-4766-9ab9-eb5f8ea0ba30";
 			};
 			name = Release;
 		};

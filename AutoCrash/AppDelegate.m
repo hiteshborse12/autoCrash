@@ -7,17 +7,132 @@
 //
 
 #import "AppDelegate.h"
-
+#import "SOLocationManager.h"
+#import "SOMotionDetector.h"
+#import "SOStepDetector.h"
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
 
+{
+    int stepCount;
+    BOOL nowRunning;
+    BOOL isSuddenStop;
+}
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeSound
+                                                                                    categories:nil]];
+    if ([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey]) {
+        UILocalNotification *note = [UILocalNotification new];
+        note.alertBody = @"Are you safe??";
+        note.soundName = UILocalNotificationDefaultSoundName;
+        [application presentLocalNotificationNow:note];
+    }
+    
+    [[SOLocationManager sharedInstance] startSignificant];
+    
+    UIDevice *device = [UIDevice currentDevice];
+    device.batteryMonitoringEnabled = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryChanged:) name:@"UIDeviceBatteryStateDidChangeNotification" object:device];
+    
+    isSuddenStop=false;
+    nowRunning=false;
+    [SOMotionDetector sharedInstance].motionTypeChangedBlock = ^(SOMotionType motionType) {
+        NSString *type = @"";
+        switch (motionType) {
+            case MotionTypeNotMoving:
+                type = @"Not moving";
+                if (nowRunning) {
+                    isSuddenStop=true;
+                }
+                break;
+            case MotionTypeWalking:
+                type = @"Walking";
+                nowRunning=true;
+                break;
+            case MotionTypeRunning:
+                type = @"Running";
+                break;
+            case MotionTypeAutomotive:
+                type = @"Automotive";
+                break;
+        }
+        
+        
+        NSString *motionTypeLabel = type;
+        NSLog(motionTypeLabel);
+        
+        if (isSuddenStop)
+        {
+            isSuddenStop=false;
+            
+            UILocalNotification *note = [UILocalNotification new];
+            note.alertBody = @"Are you safe??";
+            note.soundName = UILocalNotificationDefaultSoundName;
+            [[UIApplication sharedApplication] presentLocalNotificationNow:note];
+        }
+        NSLog( @"type %@",type);
+        
+        
+    };
+    
+    [SOMotionDetector sharedInstance].locationChangedBlock = ^(CLLocation *location) {
+        NSString *speed = [NSString stringWithFormat:@"%.2f km/h",[SOMotionDetector sharedInstance].currentSpeed * 3.6f];
+        NSLog(speed);
+    };
+    
+    [SOMotionDetector sharedInstance].accelerationChangedBlock = ^(CMAcceleration acceleration) {
+        BOOL isShaking = [SOMotionDetector sharedInstance].isShaking;
+        // NSLog(@"not shaking");
+    };
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        [SOMotionDetector sharedInstance].useM7IfAvailable = YES; //Use M7 chip if available, otherwise use lib's algorithm
+    }
+    
+    //This is required for iOS > 9.0 if you want to receive location updates in the background
+    [SOLocationManager sharedInstance].allowsBackgroundLocationUpdates = YES;
+    
+    //Starting motion detector
+    [[SOMotionDetector sharedInstance] startDetection];
+    
+    //Starting pedometer
+    [[SOStepDetector sharedInstance] startDetectionWithUpdateBlock:^(NSError *error) {
+        if (error) {
+            NSLog(@"%@", error.localizedDescription);
+            return;
+        }
+        
+        stepCount++;
+        NSString *stepCountLabel = [NSString stringWithFormat:@"Step count: %d", stepCount];
+          NSLog(stepCountLabel);
+    }];
+    
     return YES;
+}
+- (void)batteryChanged:(NSNotification *)notification
+{
+    UIDevice *device = [UIDevice currentDevice];
+    NSLog(@"state: %i ", device.batteryState);
+    
+    
+    if (device.batteryState==2) {
+        
+        
+        UILocalNotification *note = [UILocalNotification new];
+        note.alertBody = @"Are you driving??";
+        note.soundName = UILocalNotificationDefaultSoundName;
+        [[UIApplication sharedApplication] presentLocalNotificationNow:note];
+        
+    }
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
